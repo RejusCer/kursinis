@@ -11,6 +11,7 @@ export default {
         'secondary': '#5C5470',
         'tertiary': '#B9B4C7',
         'light': '#FAF0E6',
+        'white': '#FFF'
     },
     extend: {},
   },
