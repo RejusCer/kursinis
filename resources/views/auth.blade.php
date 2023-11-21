@@ -14,35 +14,57 @@
                 <form action="{{ route('signin') }}" method="POST">
                     @csrf
 
+                    @if (session('status'))
+                        <span class="text-red-400">{{ session('status') }}</span>
+                    @endif
+
                     <div class="my-3">
                         <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="email" name="email" placeholder="El. paštas">
+                        @error('email')
+                            <span  class="text-red-400">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="my-3">
                         <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="password" name="password" placeholder="Slaptažodis">
+                        @error('password')
+                            <span  class="text-red-400">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <button class="primary-btn main-transition">Prisijungti</button>
                 </form>
             </div>
             <div data-form-type="register" class="hidden">
-                <form action="" method="POST">
+                <form action="{{ route('register') }}" method="POST">
                     @csrf
+                    @if (session('status'))
+                        <span class="text-red-400">{{ session('status') }}</span>
+                    @endif
 
                     <div class="my-3">
                         <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="text" name="name" placeholder="Vardas">
+                        @error('name')
+                            <span  class="text-red-400">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="my-3">
                         <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="email" name="email" placeholder="El. paštas">
+                        @error('email')
+                            <span  class="text-red-400">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="my-3">
                         <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="password" name="password" placeholder="Slaptažodis">
+                        @error('password')
+                            <span  class="text-red-400">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="my-3">
-                        <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="password" name="password" placeholder="Pakartoti slaptažodį">
+                        <input class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" type="password" name="password_confirmation" placeholder="Pakartoti slaptažodį">
                     </div>
 
                     <button class="primary-btn main-transition">Registruotis</button>
