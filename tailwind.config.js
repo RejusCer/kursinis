@@ -21,7 +21,12 @@ export default {
         'secondarylighter': '#6e6585',
         'tertiary': '#B9B4C7',
         'light': '#FAF0E6',
-        'white': '#FFF'
+        'white': '#FFF',
+
+        'completed': 'rgb(163 230 53)',
+        'notstarted': 'rgb(82 82 91)',
+        'testing': 'rgb(96 165 250)',
+        'inprogress': 'rgb(250 204 21)'
     }
   },
   },

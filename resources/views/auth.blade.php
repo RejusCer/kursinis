@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="bg-primary h-screen w-screen flex justify-center items-center">
+<div class="h-screen w-screen flex justify-center items-center">
     <div class="min-w-[50%]">
         <div class="flex w-full">
             <button id="sign-in" class="auth-form-switchers me-2 main-transition">SIGN IN</button>

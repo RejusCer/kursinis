@@ -14,4 +14,16 @@
     .primary-btn{
         @apply bg-tertiary rounded-md border-tertiary border-2 hover:text-white hover:bg-secondary hover:border-primary px-4 py-2;
     }
+
+    .project-completion-bar{
+        @apply overflow-hidden w-full bg-red-600 rounded-xl font-bold text-center relative after:content-[''] after:absolute after:left-0 after:top-0 after:bg-completed after:h-full;
+    }
+
+    .project-status-bubbles{
+        @apply w-[42px] rounded-lg text-center font-bold text-[20px];
+    }
+
+    .main-container{
+        @apply mt-[60px] bg-secondary rounded-lg px-4 py-3;
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProjectsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,11 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+Route::get('/create-project', [ProjectsController::class, 'create'])->name('create');
+
+Route::post('/create-project', [ProjectsController::class, 'store'])->name('create');
 
 Route::get('/main', function () {
     return view('main');
