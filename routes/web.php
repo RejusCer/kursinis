@@ -27,10 +27,8 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+Route::get('/main', [ProjectsController::class, 'main'])->name('main');
+
 Route::get('/create-project', [ProjectsController::class, 'create'])->name('create');
 
 Route::post('/create-project', [ProjectsController::class, 'store'])->name('create');
-
-Route::get('/main', function () {
-    return view('main');
-})->name('main');

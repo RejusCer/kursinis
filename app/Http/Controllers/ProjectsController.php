@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Project_User;
 use Illuminate\Http\Request;
-use App\Models\Users_Projects;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectsController extends Controller
 {
+    public function main(){
+
+        $projects = Auth::user()->projects;
+
+        return view('main', [
+            'projects' => $projects
+        ]);
+    }
+
     public function create(){
         return view('projectCreate');
     }
@@ -22,12 +31,12 @@ class ProjectsController extends Controller
             'name' => $request->name
         ]);
 
-        $user_project = Users_Projects::create([
+        Project_User::create([
             'user_id' => Auth::user()->id,
             'project_id' => $project->id,
             'role' => 'admin'
         ]);
 
-        return view('main')->with('status', 'naujas projektas pridėtas');
+        return redirect()->route('main')->with('status', 'naujas projektas pridėtas');
     }
 }
