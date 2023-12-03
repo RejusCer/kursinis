@@ -16,19 +16,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth');
+Route::group(['middleware' => ['guest']], function(){
+    Route::get('/', function () {
+        return view('auth');
+    })->name('login');
+
+    Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 
-Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
-
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::group(['middleware' => ['auth']], function(){
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-Route::get('/main', [ProjectsController::class, 'main'])->name('main');
+    Route::get('/main', [ProjectsController::class, 'main'])->name('main');
 
-Route::get('/create-project', [ProjectsController::class, 'create'])->name('create');
+    Route::get('/create-project', [ProjectsController::class, 'create'])->name('create');
+    Route::post('/create-project', [ProjectsController::class, 'store'])->name('create');
 
-Route::post('/create-project', [ProjectsController::class, 'store'])->name('create');
+    Route::get('/{project:name}', [ProjectsController::class, 'project_inner'])->name('project_inner');
+});

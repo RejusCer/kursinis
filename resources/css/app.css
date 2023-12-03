@@ -20,10 +20,14 @@
     }
 
     .project-status-bubbles{
-        @apply w-[42px] rounded-lg text-center font-bold text-[20px];
+        @apply w-[42px] rounded-lg border-2  text-center font-bold text-[16px];
     }
 
     .main-container{
         @apply mt-[60px] bg-secondary rounded-lg px-4 py-3;
+    }
+
+    .secondary-container{
+        @apply bg-primary rounded-lg px-3 py-2 w-fit;
     }
 }

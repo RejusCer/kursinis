@@ -5,7 +5,7 @@
 <section class="max-w-screen-lg mx-auto text-white">
     {{-- top-user-info-band --}}
     <div class="main-container flex justify-between">
-        <div class="bg-primary rounded-lg px-3 py-2 w-fit">
+        <div class="secondary-container">
             <div>
                 <span>Projektai:</span>
                 <span class="font-bold">4</span>
@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <div class="bg-primary rounded-lg px-3 py-2 w-fit">
+        <div class="secondary-container">
             <div>
                 {{Auth::user()->name}}
             </div>

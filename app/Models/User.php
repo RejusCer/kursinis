@@ -44,11 +44,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
-    // public function Users_Projects(){
-    //     return $this->hasMany(Users_Projects::class);
-    // }
-
     // public function projects(){
     //     return $this->belongsToMany(Project::class)
     //         ->using(Users_Projects::class)
@@ -57,6 +52,6 @@ class User extends Authenticatable
     // }
 
     public function projects(){
-        return $this->belongsToMany(Project::class);
+        return $this->belongsToMany(Project::class)->withPivot('role');
     }
 }

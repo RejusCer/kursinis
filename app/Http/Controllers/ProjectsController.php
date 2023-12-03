@@ -39,4 +39,10 @@ class ProjectsController extends Controller
 
         return redirect()->route('main')->with('status', 'naujas projektas pridėtas');
     }
+
+    public function project_inner(Project $project){
+        return view('project_inner', [
+            'project' => $project
+        ]);
+    }
 }
