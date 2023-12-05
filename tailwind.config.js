@@ -22,6 +22,7 @@ export default {
         'tertiary': '#B9B4C7',
         'light': '#FAF0E6',
         'white': '#FFF',
+        'gray': '#D4D4D4',
 
         'completed': 'rgb(163 230 53)',
         'notstarted': 'rgb(82 82 91)',

@@ -16,7 +16,7 @@
     }
 
     .project-completion-bar{
-        @apply overflow-hidden w-full bg-red-600 rounded-xl font-bold text-center relative after:content-[''] after:absolute after:left-0 after:top-0 after:bg-completed after:h-full;
+        @apply overflow-hidden w-full bg-red-600 rounded-xl font-bold text-center relative after:content-[''] after:absolute after:left-0 after:top-0 after:bg-green-600 after:h-full;
     }
 
     .project-status-bubbles{
@@ -29,5 +29,9 @@
 
     .secondary-container{
         @apply bg-primary rounded-lg px-3 py-2 w-fit;
+    }
+
+    .small-gray-font{
+        @apply text-[14px] text-gray italic ;
     }
 }

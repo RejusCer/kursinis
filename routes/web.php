@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\TasksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,11 +30,15 @@ Route::group(['middleware' => ['guest']], function(){
 Route::group(['middleware' => ['auth']], function(){
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
+    // Projects
     Route::get('/main', [ProjectsController::class, 'main'])->name('main');
 
     Route::get('/create-project', [ProjectsController::class, 'create'])->name('create');
     Route::post('/create-project', [ProjectsController::class, 'store'])->name('create');
 
     Route::get('/{project:name}', [ProjectsController::class, 'project_inner'])->name('project_inner');
+
+    // Tasks
+    Route::get('{project:name}/create-task', [TasksController::class, 'create'])->name('create-task');
+    Route::post('{project:name}/create-task', [TasksController::class, 'store'])->name('create-task');
 });

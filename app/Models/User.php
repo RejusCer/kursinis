@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Task;
 use App\Models\Project;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -44,14 +45,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // public function projects(){
-    //     return $this->belongsToMany(Project::class)
-    //         ->using(Users_Projects::class)
-    //         ->withPivot('role')
-    //         ->withTimestamps();
-    // }
-
     public function projects(){
         return $this->belongsToMany(Project::class)->withPivot('role');
+    }
+
+    public function tasks(){
+        return $this->belongsToMany(Task::class)->withPivot('time_spent');
+    }
+
+    // get project task count asigned to this user
+    public function getTaskCount($projectId){
+        return Task::where('project_id', $projectId)->whereHas('users', function ($query) {
+            $query->where('user_id', $this->id);
+        })
+        ->count();
     }
 }
