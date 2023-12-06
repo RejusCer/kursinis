@@ -22,27 +22,37 @@
             </div>
 
             <div class="w-[75%] flex justify-end">
-                <div class="">
-                    <span class="inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2 border-green-600">Rėjus Černiauskas</span>
-                    <span class="inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2 border-tertiary">Martynas sasnsaunsask</span>
-                    <span class="inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2 border-tertiary">Jonas Slekta</span>
+                <div class="me-[12px]">
+                    <div class="ms-1 font-bold">Pridėti vartotojai:</div>
+                    @foreach ($project->users as $user)
+                        @php
+                            $userClass = 'border-tertiary';
+                            if ($user->pivot->role == 'admin') {
+                                $userClass = 'border-green-600';
+                            }
+                        @endphp
+
+                        <span class="user-block {{ $userClass }}">{{ $user->name }}</span>
+                    @endforeach
                 </div>
 
                 {{-- assign user to project --}}
-                <div class="max-w-[200px]">
-                    <form action="{{ route('add-users', $project) }}" method="POST" class="text-black flex flex-col">
-                        @csrf
-                        <select name="users[]" id="users" multiple class="bg-secondary text-white border-primary border-2 rounded-md">
-                            <option class="px-2" value="null" selected>Pasirinkti vartotojus</option>
-                            <option class="px-2" value="volvo">Volvo</option>
-                            <option class="px-2" value="saab">Saab</option>
-                            <option class="px-2" value="vw">VW</option>
-                            <option class="px-2" value="audi">Audi</option>
-                        </select>
 
-                        <button class="primary-btn main-transition mt-[12px]">Pridėti vartotojus</button>
-                    </form>
-                </div>
+                @if ( 0 != $users = count($project->free_users($project->id)))
+                    <div class="max-w-[200px]">
+                        <form action="{{ route('add-users', $project) }}" method="POST" class="text-black flex flex-col">
+                            @csrf
+                            <select name="users[]" id="users" multiple class="bg-secondary text-white border-primary border-2 rounded-md">
+                                @foreach ($users as $user)
+                                    <option class="px-2" value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+
+                            </select>
+
+                            <button class="primary-btn main-transition mt-[12px]">Pridėti vartotojus</button>
+                        </form>
+                    </div>
+                @endif
 
             </div>
         </div>

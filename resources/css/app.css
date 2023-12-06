@@ -42,6 +42,10 @@
     .heading-1{
         @apply text-[36px] font-bold;
     }
+
+    .user-block{
+        @apply inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2;
+    }
 }
 
 ul{

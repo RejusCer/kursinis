@@ -17,7 +17,13 @@ class Project extends Model
     ];
 
     public function users(){
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withPivot('role');
+    }
+
+    public function free_users($project_id){
+        return User::whereDoesntHave('projects', function($query) use($project_id){
+            $query->where('project_id', $project_id);
+        })->get();
     }
 
     public function tasks(){

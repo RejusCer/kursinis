@@ -53,6 +53,10 @@ class ProjectsController extends Controller
     }
 
     public function add_users(Request $request, Project $project){
-        dd($request);
+        $user_ids = array_map('intval', $request->users);
+
+        $project->users()->attach($user_ids, ['role' => 'user']);
+
+        return back()->with('status', "Nauji vartotojai pridėti prie projekto");
     }
 }

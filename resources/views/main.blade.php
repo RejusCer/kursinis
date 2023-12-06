@@ -8,7 +8,7 @@
         <div class="secondary-container">
             <div>
                 <span>Projektai:</span>
-                <span class="font-bold">4</span>
+                <span class="font-bold">{{ count(Auth::user()->projects) }}</span>
             </div>
             <div>
                 <span>Užduotys:</span>
