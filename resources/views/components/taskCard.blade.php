@@ -1,7 +1,7 @@
 @props(['task' => $task])
 
 {{-- task-card --}}
-<a href="#" class="secondary-container w-full mb-4 relative flex justify-between border-primary border-x-8 hover:border-tertiary main-transition">
+<a href="{{ route('task_inner', [$task->project, $task]) }}" class="secondary-container w-full mb-4 relative flex justify-between border-primary border-x-8 hover:border-tertiary main-transition">
     <div class="border-4 border-t-0  border-notstarted absolute top-0 left-[50%] translate-x-[-50%] px-4 py-1 rounded-b-3xl">
         {{ $task->current_state->state_name }}
     </div>

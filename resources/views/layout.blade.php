@@ -13,5 +13,9 @@
 </head>
 <body class="bg-primary">
     @yield('content')
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+
+    @yield('scripts')
 </body>
 </html>

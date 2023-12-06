@@ -23,4 +23,8 @@ class Project extends Model
     public function tasks(){
         return $this->hasMany(Task::class);
     }
+
+    public function top_level_tasks(){
+        return $this->hasMany(Task::class)->where('parent_id', null);
+    }
 }

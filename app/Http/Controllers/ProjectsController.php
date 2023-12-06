@@ -45,4 +45,14 @@ class ProjectsController extends Controller
             'project' => $project
         ]);
     }
+
+    public function destroy(Project $project){
+        $project->delete();
+
+        return redirect()->route('main')->with('status', 'Projektas ištrintas sekmingai');
+    }
+
+    public function add_users(Request $request, Project $project){
+        dd($request);
+    }
 }

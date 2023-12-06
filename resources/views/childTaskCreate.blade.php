@@ -6,7 +6,7 @@
     <div class="main-container">
 
         <div>
-            <form action="{{ route('create-task', $project) }}" method="POST">
+            <form action="{{ route('create-child-task', [$project, $task]) }}" method="POST">
                 @csrf
 
                 <x-reusables.createTaskFields />

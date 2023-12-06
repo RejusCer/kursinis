@@ -12,7 +12,11 @@
     }
 
     .primary-btn{
-        @apply bg-tertiary rounded-md border-tertiary border-2 hover:text-white hover:bg-secondary hover:border-primary px-4 py-2;
+        @apply bg-tertiary rounded-md border-tertiary border-2 hover:text-white hover:bg-secondary hover:border-primary px-4 py-1;
+    }
+
+    .danger-button{
+        @apply primary-btn bg-red-600 border-red-600 hover:text-red-800 hover:bg-white main-transition hover:border-red-600 py-1;
     }
 
     .project-completion-bar{
@@ -34,4 +38,13 @@
     .small-gray-font{
         @apply text-[14px] text-gray italic ;
     }
+
+    .heading-1{
+        @apply text-[36px] font-bold;
+    }
+}
+
+ul{
+    padding-left: 32px;
+    list-style-type: disc;
 }

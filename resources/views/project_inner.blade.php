@@ -8,9 +8,8 @@
 
 <section class="max-w-screen-lg mx-auto text-white">
     <div class="main-container">
-        <a href="{{ route('main') }}" class="mb-[12px] inline-block hover:underline">
-            << Į pagrindinį
-        </a>
+
+        <x-reusables.breadcrumbs :project="$project" task="null" />
 
         <div class="flex justify-between">
             <div class="secondary-container bg-tertiary min-w-[140px]">
@@ -21,12 +20,39 @@
 
                 <x-reusables.taskBubbles :project="$project" />
             </div>
-            <div class="secondary-container min-w-[140px]">
-                <div>
-                    <span>{{ Auth::user()->name }}: </span>
-                    <span>{{ $userRole }}</span>
+
+            <div class="w-[75%] flex justify-end">
+                <div class="">
+                    <span class="inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2 border-green-600">Rėjus Černiauskas</span>
+                    <span class="inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2 border-tertiary">Martynas sasnsaunsask</span>
+                    <span class="inline-block text-[14px] border-2 rounded-md bg-primary whitespace-nowrap m-1 px-2 border-tertiary">Jonas Slekta</span>
                 </div>
+
+                {{-- assign user to project --}}
+                <div class="max-w-[200px]">
+                    <form action="{{ route('add-users', $project) }}" method="POST" class="text-black flex flex-col">
+                        @csrf
+                        <select name="users[]" id="users" multiple class="bg-secondary text-white border-primary border-2 rounded-md">
+                            <option class="px-2" value="null" selected>Pasirinkti vartotojus</option>
+                            <option class="px-2" value="volvo">Volvo</option>
+                            <option class="px-2" value="saab">Saab</option>
+                            <option class="px-2" value="vw">VW</option>
+                            <option class="px-2" value="audi">Audi</option>
+                        </select>
+
+                        <button class="primary-btn main-transition mt-[12px]">Pridėti vartotojus</button>
+                    </form>
+                </div>
+
             </div>
+        </div>
+
+        <div class="mt-[24px] flex justify-end">
+            <form action="{{ route('destroy-project', $project) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button class="danger-button">Ištrinti projektą</button>
+            </form>
         </div>
     </div>
 
@@ -43,9 +69,11 @@
         @endif
 
         <div>
-            @foreach ($project->tasks as $task)
+            @forelse ($project->top_level_tasks as $task)
                 <x-taskCard :task="$task" />
-            @endforeach
+            @empty
+                Užduotys nerastos
+            @endforelse
         </div>
     </div>
 </section>
