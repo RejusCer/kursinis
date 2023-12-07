@@ -52,4 +52,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('{project:name}/{task}/create-child-task', [TasksController::class, 'child_task_store'])->name('create-child-task');
 
     Route::get('{project:name}/task/{task}', [TasksController::class, 'task_inner'])->name('task_inner');
+
+    Route::post('/task/{task}/add-users', [TasksController::class, 'add_users'])->name('task.add_users');
 });

@@ -38,7 +38,7 @@
 
                 {{-- assign user to project --}}
 
-                @if ( 0 != $users = count($project->free_users($project->id)))
+                @if ( 0 != count($users = $project->free_users($project->id)))
                     <div class="max-w-[200px]">
                         <form action="{{ route('add-users', $project) }}" method="POST" class="text-black flex flex-col">
                             @csrf
@@ -57,6 +57,7 @@
             </div>
         </div>
 
+        @if ($userRole == 'admin')
         <div class="mt-[24px] flex justify-end">
             <form action="{{ route('destroy-project', $project) }}" method="POST">
                 @csrf
@@ -64,6 +65,7 @@
                 <button class="danger-button">Ištrinti projektą</button>
             </form>
         </div>
+        @endif
     </div>
 
     <div class="main-container">

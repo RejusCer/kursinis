@@ -53,6 +53,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Task::class)->withPivot('time_spent');
     }
 
+    public function belongsToTask($task_id){
+        return User::whereHas('tasks', function ($query) use ($task_id) {
+            $query->where('tasks.id', $task_id);
+        })->find($this->id);
+    }
+
     // get project task count asigned to this user
     public function getTaskCount($projectId){
         return Task::where('project_id', $projectId)->whereHas('users', function ($query) {

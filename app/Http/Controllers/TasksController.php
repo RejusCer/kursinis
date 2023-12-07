@@ -91,4 +91,12 @@ class TasksController extends Controller
 
         return redirect()->route('project_inner', $project)->with('status', "Užduotis ištrinta");
     }
+
+    public function add_users(Request $request, Task $task){
+        $user_ids = array_map('intval', $request->users);
+
+        $task->users()->attach($user_ids, ['time_spent' => '0']);
+
+        return back()->with('status', "Nauji vartotojai pridėti prie užduotis");
+    }
 }

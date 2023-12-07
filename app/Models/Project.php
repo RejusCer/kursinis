@@ -30,6 +30,19 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
+    // gets all users that belong to this project but doesn't belong to specified task
+    public function users_not_in_task($task_id){
+        return User::whereHas('projects', function ($query) {
+            $query->where('projects.id', $this->id);
+        })
+        ->where(function ($query) use ($task_id) {
+            $query->orWhereDoesntHave('tasks', function ($subQuery) use ($task_id) {
+                $subQuery->where('tasks.id', $task_id);
+            });
+        })
+        ->get();
+    }
+
     public function top_level_tasks(){
         return $this->hasMany(Task::class)->where('parent_id', null);
     }
