@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <script src="{{ asset('js/auth.js') }}" defer></script>
+    <script src="{{ asset('js/trigger_form_on_select.js') }}" defer></script>
 
     <title>Kursinis</title>
 

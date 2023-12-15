@@ -1,8 +1,26 @@
 @props(['task' => $task])
 
+@php
+    // later add field to state table to optimize this code
+    $stateColorClass = '';
+
+    if($task->current_state->state_name == "Nepradėta"){
+        $stateColorClass = 'notstarted';
+    }
+    else if($task->current_state->state_name == "Baigta"){
+        $stateColorClass = 'completed';
+    }
+    else if($task->current_state->state_name == "Testuojama"){
+        $stateColorClass = 'testing';
+    }
+    else if($task->current_state->state_name == "Daroma"){
+        $stateColorClass = 'inprogress';
+    }
+@endphp
+
 {{-- task-card --}}
 <a href="{{ route('task_inner', [$task->project, $task]) }}" class="secondary-container w-full mb-4 relative flex justify-between border-primary border-x-8 hover:border-tertiary main-transition">
-    <div class="border-4 border-t-0  border-notstarted absolute top-0 left-[50%] translate-x-[-50%] px-4 py-1 rounded-b-3xl">
+    <div class="border-{{ $stateColorClass }} border-4 border-t-0 absolute top-0 left-[50%] translate-x-[-50%] px-4 py-1 rounded-b-3xl">
         {{ $task->current_state->state_name }}
     </div>
 
@@ -16,7 +34,9 @@
     <div class="flex flex-col justify-between">
         <div class="text-[26px] font-bold">{{ $task->name }}</div>
 
+        @if (count($task->children) != 0)
         <x-reusables.progressionBar />
+        @endif
     </div>
 
     <div class="flex flex-col items-end">

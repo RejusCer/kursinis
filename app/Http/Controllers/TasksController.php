@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Project;
 use App\Models\Project_User;
+use App\Models\State;
 use App\Models\Task_User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 
 class TasksController extends Controller
 {
@@ -80,9 +82,12 @@ class TasksController extends Controller
 
 
     public function task_inner(Project $project, Task $task){
+        $states = State::all();
+
         return view('task_inner', [
             'project' => $project,
-            'task' => $task
+            'task' => $task,
+            'states' => $states
         ]);
     }
 
@@ -98,5 +103,21 @@ class TasksController extends Controller
         $task->users()->attach($user_ids, ['time_spent' => '0']);
 
         return back()->with('status', "Nauji vartotojai pridėti prie užduotis");
+    }
+
+    public function update_state(Task $task, Request $request){
+        $request->validate([
+            'state' => 'required|exists:states,id',
+        ], [
+            'state.exists' => 'Pasirinkta būsena neegzistuoja.',
+        ]);
+
+        $newStateId = $request->state;
+        $newState = State::findOrFail($newStateId);
+
+        $task->current_state()->associate($newState);
+        $task->save();
+
+        return back()->with('status', "Užduoties būsena atnaujinta");
     }
 }

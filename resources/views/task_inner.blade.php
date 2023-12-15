@@ -10,17 +10,6 @@
     <div class="main-container">
         <x-reusables.breadcrumbs :project="$project" :task="$task" />
 
-        {{-- Change task status --}}
-        <div>
-            <div>
-
-            </div>
-
-            <div>
-
-            </div>
-        </div>
-
         <div class="flex justify-between mb-[12px]">
             <div>
                 <div><span class="small-gray-font">Prleista laiko:</span> 1:30</div>
@@ -60,15 +49,31 @@
             </div>
         </div>
 
-        @if ($userRole == 'admin')
-        <div class="flex justify-end mt-[24px]">
+        <div class="flex justify-between mt-[24px]">
+            <div>
+                @if (Auth::user()->belongsToTask($task->id) != null)
+                <form id="state-form" action="{{ route('task.update.state', $task) }}" method="POST" class="text-black flex flex-col">
+                    @csrf
+                    <select name="state" id="state-select" class="bg-secondary text-white border-primary border-2 rounded-md">
+                        @foreach ($states as $state)
+                            @php
+                                $selected = $task->current_state->id == $state->id ? "selected" : "";
+                            @endphp
+                            <option class="px-2" value="{{ $state->id }}" {{ $selected }} >{{ $state->state_name }}</option>
+                        @endforeach
+                    </select>
+                </form>
+                @endif
+            </div>
+
+            @if ($userRole == 'admin')
             <form action="{{ route('destroy-task', [$project, $task]) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button class="danger-button">Ištrinti užduotį</button>
             </form>
+            @endif
         </div>
-        @endif
     </div>
 
     <div class="main-container">
