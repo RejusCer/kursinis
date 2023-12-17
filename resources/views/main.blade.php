@@ -2,17 +2,24 @@
 
 @section('content')
 
+@php
+    $taskCount = 0;
+    foreach ($projects as $project):
+        $taskCount += count($project->tasks);
+    endforeach
+@endphp
+
 <section class="max-w-screen-lg mx-auto text-white">
     {{-- top-user-info-band --}}
     <div class="main-container flex justify-between">
         <div class="secondary-container">
             <div>
                 <span>Projektai:</span>
-                <span class="font-bold">{{ count(Auth::user()->projects) }}</span>
+                <span class="font-bold">{{ count($projects) }}</span>
             </div>
             <div>
                 <span>Užduotys:</span>
-                <span class="font-bold">45</span>
+                <span class="font-bold">{{ count(Auth::user()->tasks) }} / {{ $taskCount }}</span>
             </div>
         </div>
 

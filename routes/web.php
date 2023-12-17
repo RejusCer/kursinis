@@ -55,5 +55,8 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::post('/task/{task}/add-users', [TasksController::class, 'add_users'])->name('task.add_users');
 
+    Route::post('/task/{task}/track-time', [TasksController::class, 'track_time'])->name('task.track_time');
+    Route::post('/task/{task}/stop_time', [TasksController::class, 'stop_time'])->name('task.stop_time');
+
     Route::post('/task/{task}/update-state', [TasksController::class, 'update_state'])->name('task.update.state');
 });

@@ -50,7 +50,7 @@ class User extends Authenticatable
     }
 
     public function tasks(){
-        return $this->belongsToMany(Task::class)->withPivot('time_spent');
+        return $this->belongsToMany(Task::class)->withPivot(['time_spent', 'activatedOn']);
     }
 
     public function belongsToTask($task_id){

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Task;
-use App\Models\Project;
-use App\Models\Project_User;
 use App\Models\State;
+use App\Models\Project;
 use App\Models\Task_User;
+use App\Models\Project_User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
@@ -119,5 +120,25 @@ class TasksController extends Controller
         $task->save();
 
         return back()->with('status', "Užduoties būsena atnaujinta");
+    }
+
+    public function track_time(Task $task){
+        $currentTime = Carbon::now();
+
+        $task->users()->updateExistingPivot(Auth::user()->id, ['activatedOn' => $currentTime]);
+
+        return back()->with('status', "Laikas sekamas");
+    }
+
+    public function stop_time(Task $task){
+        $activatedTime = $task->users()->wherePivot('user_id', Auth::user()->id)->value('activatedOn');
+        $activatedOn = Carbon::parse($activatedTime);
+        $currentTime = Carbon::now();
+        $difference = $currentTime->diff($activatedOn)->format('%h:%I');
+
+        $task->users()->updateExistingPivot(Auth::user()->id, ['time_spent' => $difference]);
+        $task->users()->updateExistingPivot(Auth::user()->id, ['activatedOn' => null]);
+
+        return back()->with('status', "Laiko sekimas sustabdytas");
     }
 }

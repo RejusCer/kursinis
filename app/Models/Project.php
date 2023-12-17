@@ -30,6 +30,12 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function countCompletedTasks(){
+        return $this->tasks()->whereHas('current_state', function ($query) {
+            $query->where('state_name', 'Baigta');
+        })->count();
+    }
+
     // gets all users that belong to this project but doesn't belong to specified task
     public function users_not_in_task($task_id){
         return User::whereHas('projects', function ($query) {

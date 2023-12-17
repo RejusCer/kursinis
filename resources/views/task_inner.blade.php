@@ -4,6 +4,22 @@
 
 @php
     $userRole = Auth::user()->projects->find($project->id)->pivot->role;
+
+    $totalTimeSpent = 0;
+    foreach ($task->users as $user) {
+        // Convert the "time_spent" format (e.g., "4:54") to minutes
+        if (strpos($user->pivot->time_spent, ':') !== false) {
+            list($hours, $minutes) = explode(':', $user->pivot->time_spent);
+            $totalTimeSpent += $hours * 60 + $minutes;
+        }
+    }
+
+    // Now $totalTimeSpent contains the sum of all 'time_spent' values for the specified task in minutes
+    // Convert it back to hours and minutes if needed
+    $totalHours = floor($totalTimeSpent / 60);
+    $totalMinutes = $totalTimeSpent % 60;
+
+    $totalString = $totalHours . ":" . $totalMinutes;
 @endphp
 
 <section class="max-w-screen-lg mx-auto text-white">
@@ -12,7 +28,7 @@
 
         <div class="flex justify-between mb-[12px]">
             <div>
-                <div><span class="small-gray-font">Prleista laiko:</span> 1:30</div>
+                <div><span class="small-gray-font">Praleista laiko:</span> {{ $totalString }}</div>
                 <div><span class="small-gray-font">Duotas laikas užduočiai:</span> {{ $task->time_estimation }}</div>
             </div>
             <div>
@@ -50,7 +66,7 @@
         </div>
 
         <div class="flex justify-between mt-[24px]">
-            <div>
+            <div class="flex flex-row">
                 @if (Auth::user()->belongsToTask($task->id) != null)
                 <form id="state-form" action="{{ route('task.update.state', $task) }}" method="POST" class="text-black flex flex-col">
                     @csrf
@@ -62,6 +78,21 @@
                             <option class="px-2" value="{{ $state->id }}" {{ $selected }} >{{ $state->state_name }}</option>
                         @endforeach
                     </select>
+                </form>
+                @endif
+
+                @php
+                    $activatedOn = $task->users()->wherePivot('user_id', Auth::user()->id)->value('activatedOn');
+                @endphp
+                @if ($activatedOn)
+                <form action="{{ route('task.stop_time', $task) }}" method="POST" class="ms-4">
+                    @csrf
+                    <button class="danger-button main-transition">Sustabdyti laiko sekimą</button>
+                </form>
+                @else
+                <form action="{{ route('task.track_time', $task) }}" method="POST" class="ms-4">
+                    @csrf
+                    <button class="primary-btn main-transition">Sekti laiką</button>
                 </form>
                 @endif
             </div>

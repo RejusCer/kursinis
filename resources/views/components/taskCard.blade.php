@@ -35,7 +35,7 @@
         <div class="text-[26px] font-bold">{{ $task->name }}</div>
 
         @if (count($task->children) != 0)
-        <x-reusables.progressionBar />
+        <x-reusables.progressionBar :task="$task" />
         @endif
     </div>
 
@@ -44,6 +44,8 @@
 
         <div class="text-end mb-[12px]"><span class="small-gray-font">Terminas:</span> {{ $task->dead_line }}</div>
 
-        <div class="text-end"><span class="small-gray-font">Papildomos užduotys:</span> 0</div>
+        @if (count($task->children) != 0)
+        <div class="text-end"><span class="small-gray-font">Papildomos užduotys:</span> {{ $task->countChildrenRecursive() - 1 }}</div>
+        @endif
     </div>
 </a>

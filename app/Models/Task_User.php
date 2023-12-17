@@ -15,6 +15,7 @@ class Task_User extends Pivot
     protected $fillable = [
         'user_id',
         'task_id',
-        'time_spent'
+        'time_spent',
+        'activatedOn'
     ];
 }
