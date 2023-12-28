@@ -1,7 +1,10 @@
 @props(['project' => $project])
 
 @php
-    $completedPercent = round($project->countCompletedTasks() / count($project->tasks) * 100);
+    $completedPercent = 0;
+    if (count($project->tasks) != 0 ){
+        $completedPercent = round($project->countCompletedTasks() / count($project->tasks) * 100);
+    }
 @endphp
 
 {{-- project card --}}
