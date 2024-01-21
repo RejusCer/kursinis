@@ -2,26 +2,6 @@
 
 @section('content')
 
-@php
-    $userRole = Auth::user()->projects->find($project->id)->pivot->role;
-
-    $totalTimeSpent = 0;
-    foreach ($task->users as $user) {
-        // Convert the "time_spent" format (e.g., "4:54") to minutes
-        if (strpos($user->pivot->time_spent, ':') !== false) {
-            list($hours, $minutes) = explode(':', $user->pivot->time_spent);
-            $totalTimeSpent += $hours * 60 + $minutes;
-        }
-    }
-
-    // Now $totalTimeSpent contains the sum of all 'time_spent' values for the specified task in minutes
-    // Convert it back to hours and minutes if needed
-    $totalHours = floor($totalTimeSpent / 60);
-    $totalMinutes = $totalTimeSpent % 60;
-
-    $totalString = $totalHours . ":" . $totalMinutes;
-@endphp
-
 <section class="max-w-screen-lg mx-auto text-white">
     <div class="main-container">
         <x-reusables.breadcrumbs :project="$project" :task="$task" />
@@ -65,7 +45,8 @@
             </div>
         </div>
 
-        <div class="flex justify-between mt-[24px]">
+        {{-- track time --}}
+        <div class="flex justify-between mt-[24px]  border-2 border-primary rounded-lg p-2">
             <div class="flex flex-row">
                 @if (Auth::user()->belongsToTask($task->id) != null)
                 <form id="state-form" action="{{ route('task.update.state', $task) }}" method="POST" class="text-black flex flex-col">
@@ -105,18 +86,70 @@
             </form>
             @endif
         </div>
+
+        {{-- comments --}}
+        <div class="mt-[24px]">
+            {{-- post comment form --}}
+            <div>
+                <button class="primary-btn main-transition" id="show-comment-form">Pridėti komentarą</button>
+
+                <form action="{{ route('comment.store', [Auth::user(), $task]) }}" method="POST" class="hidden" id="comment-post-form">
+                    @csrf
+
+                    <div class="my-3 text-black">
+                        <textarea class="w-full px-4 py-2 border-2 rounded border-primary bg-secondary" name="content" id="editor" cols="30" rows="10" placeholder="Užduoties aprašymas"></textarea>
+                        @error('content')
+                            <span  class="text-red-400">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button class="primary-btn main-transition">Išsaugoti komentarą</button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- get all comments list --}}
+            <div>
+                @foreach ($comments as $comment)
+                    @php
+                        $addClasses = '';
+                        if ($comment->doesBelongTo(Auth::user()->id)) $addClasses = 'border-2 border-completed';
+                    @endphp
+                    <div class="mt-[12px] secondary-container w-full {{ $addClasses }}">
+                        <div class="flex relative">
+                            <div class="small-gray-font">
+                                <span>Autorius: {{ $comment->user->name }}</span>
+                                <span class="mx-[12px]">|</span>
+                                <span>Sukurta: {{ $comment->created_at->format('Y-m-d') }}</span>
+                            </div>
+
+                            @if ($comment->doesBelongTo(Auth::user()->id))
+                            <div class="absolute top-0 right-0">
+                                <form action="{{ route('comment.destroy', $comment) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="danger-button">Ištrinti</button>
+                                </form>
+                            </div>
+                            @endif
+                        </div>
+
+                        <div>
+                            {!! $comment->content !!}
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <div class="main-container">
 
-        @if ($userRole == 'admin')
+        @if ($task->is_user_assigned(Auth::user()->id))
             <a href="{{ route('create-child-task', [$project, $task]) }}" class="mb-[36px] block">
                 <button class="primary-btn main-transition">Sukurti naują užduotį</button>
             </a>
-        @endif
-
-        @if (session('status'))
-            <span class="text-blue-400">{{ session('status') }}</span>
         @endif
 
         <div>
@@ -126,5 +159,18 @@
         </div>
     </div>
 </section>
+
+@endsection
+
+
+@section('scripts')
+
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
 
 @endsection

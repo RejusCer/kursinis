@@ -16,6 +16,22 @@
     else if($task->current_state->state_name == "Daroma"){
         $stateColorClass = 'inprogress';
     }
+
+
+    $addClasses = 'border-green-600';
+    $totalTimeSpent = $task->total_time_spent();
+    $timeEstimate = $task->time_estimation;
+
+    if ($totalTimeSpent != '0:00'){
+        // convert hours : minutes strint to minutes integer
+        list($hours, $minutes) = explode(':', $totalTimeSpent);
+        $totalTimeSpent_int = ($hours * 60) + $minutes;
+
+        list($hours, $minutes) = explode(':', $timeEstimate);
+        $timeEstimate_int = ($hours * 60) + $minutes;
+
+        if ($totalTimeSpent_int > $timeEstimate_int) $addClasses = 'border-red-600';
+    }
 @endphp
 
 {{-- task-card --}}
@@ -26,7 +42,7 @@
 
     {{-- checks if task belongs to currently logged in user --}}
     @if (Auth::user()->tasks()->where('task_id', $task->id)->exists())
-        <div class="border-4 border-b-0  border-tertiary bg-tertiary absolute bottom-0 left-[50%] translate-x-[-50%] px-4 rounded-t-3xl text-white font-bold text-[16px]">
+        <div class="border-4 border-b-0  border-completed bg-completed absolute bottom-0 left-[50%] translate-x-[-50%] px-4 rounded-t-3xl text-white font-bold text-[16px]">
             PRISKIRTA MAN
         </div>
     @endif
@@ -40,7 +56,7 @@
     </div>
 
     <div class="flex flex-col items-end">
-        <div class="mb-[12px] border-2 rounded-xl border-green-600 px-2">0 / {{ $task->time_estimation }}</div>
+        <div class="mb-[12px] border-2 rounded-xl px-2 {{ $addClasses }}">{{ $totalTimeSpent }} / {{ $timeEstimate }}</div>
 
         <div class="text-end mb-[12px]"><span class="small-gray-font">Terminas:</span> {{ $task->dead_line }}</div>
 

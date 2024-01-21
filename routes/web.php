@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
 use Illuminate\Http\Request;
@@ -29,6 +30,9 @@ Route::group(['middleware' => ['guest']], function(){
 
 Route::group(['middleware' => ['auth']], function(){
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/user/edit/{user}', [AuthController::class, 'edit_form'])->name('user.edit.form');
+    Route::post('/user/edit/{user}', [AuthController::class, 'edit'])->name('user.edit.form');
 
     // Projects
     Route::get('/main', [ProjectsController::class, 'main'])->name('main');
@@ -59,4 +63,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('/task/{task}/stop_time', [TasksController::class, 'stop_time'])->name('task.stop_time');
 
     Route::post('/task/{task}/update-state', [TasksController::class, 'update_state'])->name('task.update.state');
+
+    // Comments
+    Route::post('comment/post/user/{user}/task/{task}', [CommentsController::class, 'store'])->name('comment.store');
+    Route::delete('comment/destroy/{comment}', [CommentsController::class, 'destroy'])->name('comment.destroy');
 });

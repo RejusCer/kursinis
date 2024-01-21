@@ -28,7 +28,7 @@
                 {{Auth::user()->name}}
             </div>
             <div class="flex mt-[24px]">
-                <a href="#">
+                <a href="{{ route('user.edit.form', Auth::user()) }}">
                     <button class="primary-btn main-transition">Redaguoti profilį</button>
                 </a>
 
@@ -45,10 +45,6 @@
         <a href="{{ route('create') }}" class="mb-[36px] block">
             <button class="primary-btn main-transition">Sukurti naują projektą</button>
         </a>
-
-        @if (session('status'))
-            <span class="text-blue-400">{{ session('status') }}</span>
-        @endif
 
         <div class="flex justify-start flex-wrap">
 

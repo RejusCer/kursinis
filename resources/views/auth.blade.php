@@ -14,8 +14,8 @@
                 <form action="{{ route('signin') }}" method="POST">
                     @csrf
 
-                    @if (session('status'))
-                        <span class="text-red-400">{{ session('status') }}</span>
+                    @if (session('auth_status'))
+                        <span class="text-red-400">{{ session('auth_status') }}</span>
                     @endif
 
                     <div class="my-3">
@@ -38,8 +38,8 @@
             <div data-form-type="register" class="hidden">
                 <form action="{{ route('register') }}" method="POST">
                     @csrf
-                    @if (session('status'))
-                        <span class="text-red-400">{{ session('status') }}</span>
+                    @if (session('auth_status'))
+                        <span class="text-red-400">{{ session('auth_status') }}</span>
                     @endif
 
                     <div class="my-3">

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\State;
+use App\Models\Comment;
 use App\Models\Project;
 use App\Models\Task_User;
+use App\Rules\TimeFormat;
 use App\Models\Project_User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +25,7 @@ class TasksController extends Controller
     public function store(Request $request, Project $project){
         $request->validate([
             'name' => 'required|max:64',
-            'time_estimation' => 'required|max:64',
+            'time_estimation' => ['required', 'max:64', new TimeFormat],
             'dead_line' => 'required|max:64|date_format:Y-m-d|after:today',
             'description' => 'required|max:255'
         ]);
@@ -83,12 +85,41 @@ class TasksController extends Controller
 
 
     public function task_inner(Project $project, Task $task){
+        $userRole = Auth::user()->projects->find($project->id)->pivot->role;
+
+
+        $totalTimeSpent = 0;
+        foreach ($task->users as $user) {
+            // Convert the "time_spent" format (e.g., "4:54") to minutes
+            if (strpos($user->pivot->time_spent, ':') !== false) {
+                list($hours, $minutes) = explode(':', $user->pivot->time_spent);
+                $totalTimeSpent += $hours * 60 + $minutes;
+            }
+        }
+
+        // Now $totalTimeSpent contains the sum of all 'time_spent' values for the specified task in minutes
+        // Convert it back to hours and minutes if needed
+        $totalHours = floor($totalTimeSpent / 60);
+        $totalMinutes = $totalTimeSpent % 60;
+
+        $totalMinutes_string = $totalMinutes;
+        if ($totalMinutes < 10) $totalMinutes_string = '0' . $totalMinutes;
+
+        $totalString = $totalHours . ":" . $totalMinutes_string;
+
+
         $states = State::all();
+
+        $comments = Comment::where('task_id', $task->id)->orderBy('created_at', 'desc')->get();
+
 
         return view('task_inner', [
             'project' => $project,
             'task' => $task,
-            'states' => $states
+            'states' => $states,
+            'comments' => $comments,
+            'userRole' => $userRole,
+            'totalString' => $totalString
         ]);
     }
 
@@ -134,8 +165,22 @@ class TasksController extends Controller
         $activatedTime = $task->users()->wherePivot('user_id', Auth::user()->id)->value('activatedOn');
         $activatedOn = Carbon::parse($activatedTime);
         $currentTime = Carbon::now();
-        $difference = $currentTime->diff($activatedOn)->format('%h:%I');
+        $difference = $currentTime->diff($activatedOn)->format('%H:%I');
 
+        // difference + old time_spent
+        $oldTimeSpentByUser = $task->users()->wherePivot('user_id', Auth::user()->id)->value('time_spent');
+
+        if ($oldTimeSpentByUser != '0'){
+            $difference = Carbon::createFromFormat('H:i', $difference);
+
+            $hours_minutes = explode(':', $oldTimeSpentByUser);
+            $difference = $difference->copy()->addHours((int)$hours_minutes[0]);
+            $difference = $difference->copy()->addMinutes((int)$hours_minutes[1]);
+
+            $difference = $difference->format('H:i');
+        }
+
+        //save new time
         $task->users()->updateExistingPivot(Auth::user()->id, ['time_spent' => $difference]);
         $task->users()->updateExistingPivot(Auth::user()->id, ['activatedOn' => null]);
 

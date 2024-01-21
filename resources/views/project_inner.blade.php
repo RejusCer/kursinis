@@ -76,10 +76,6 @@
             </a>
         @endif
 
-        @if (session('status'))
-            <span class="text-blue-400">{{ session('status') }}</span>
-        @endif
-
         <div>
             @forelse ($project->top_level_tasks as $task)
                 <x-taskCard :task="$task" />
